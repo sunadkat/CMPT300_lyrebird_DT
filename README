@@ -1,0 +1,32 @@
+Name: David Tran
+Student Number: 301223841
+SFU User Name: dta31
+Lecture Section: CMPT 300: D100
+Instructor: Brian G. Booth
+TA: Scott Kristjanson
+
+This program is an updated version of the previous entry. This program is not limited by the hardware on a single computer now that we utilize sockets. Multiple computers are now able to decrypt the files so the limitations now are the number of computers available. Connections and tasks between server and clients are handled via a first come first served policy and the clients decrypt in a fcfs manner too.
+
+This program consists of the following files:
+server.c, client.c, decrypt.c, decrypt.h, and a makefile
+(memwatch.h and memwatch.c are required to run the program)
+
+The main commands in the makefile are: "make" OR "make all",
+which will compile the above mentioned .c and .h files.
+This will create the lyrebird.client and lyrebird.server program.
+The other command is: "make clean",
+this will clean the files created from the "make" command.
+
+The program is executed by opening the lyrebird.server on the terminal, the user must type in the name/location of the config file (which contains the locations of all the encrypted files followed by their desired decrypted filename) and a log file name which will contain the details of what happened during the while running. This should output a IPv4 address and a port number. 
+Ex. ./lyrebird.server <CONFIG FILE> <LOGFILE>
+
+As for the client, open a new terminal on the current or different computer and open the lyrebird.client program, following that the IP address of the server is needed followed by the port number (these are all given by the server upon running it). (*Note that the encrypted files must also be present when using a different computer)
+Ex. ./lyrebird.client <IP> <PORT>
+
+Example of the the config_file.txt file contents:
+decrypt1.txt encrypt1.txt
+decrypt2.txt encrypt2.txt
+
+Reference to using sockets:
+Beej's Guide to Network Programming,
+http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html

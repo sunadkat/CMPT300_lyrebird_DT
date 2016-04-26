@@ -1,0 +1,41 @@
+<!--
+Name: David Tran
+Student Number: 301223841
+SFU User Name: dta31
+Lecture Section: CMPT 300: D100
+Instructor: Brian G. Booth
+TA: Scott Kristjanson
+-->
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title> CMPT 300 Report </title>
+</head>
+<body>
+<p>
+Name: David Tran <br>
+Student Number: 301223841 <br>
+SFU User Name: dta31 <br>
+Lecture Section: CMPT 300: D100 <br>
+Instructor: Brian G. Booth <br>
+TA: Scott Kristjanson <br>
+</p>
+  <h1>CMPT 300 Report</h1>
+  <p>Overview and Concluding Thoughts</p>
+  <p>
+    This is an update to the previous iteration where the program was to decrypt tweets by using a parent to send messages to the children by using two scheduling policies. While it was faster than iteration 2's program, it was limited by the hardware on the computer it was running on. To improve this we take advantage of sockets so that it can be decrypted using the hardware on multiple computers. The server is the main program that sends out tasks (the file names that must be decrypted) to its clients using the fcfs policy; the clients behave similarly to iteration 3, in terms of parent sending tasks to cores-1 children but only utilize fcfs. That way we can increase the efficiency of decrypting and are only limited by the number of computers or cores available. I noticed while testing the changes in the speed of many decryptions when I used 1 client versus multiple.
+  </p>
+  <p>Design and Implementation</p>
+  <p>
+    The client involved updating the third iteration to include sockets, when connected to the server I made sure all children closed their sockets to ensure they don't send messages to the server. How I implemented message passing on the client was that once a pipe FD (child) is ready, the parent sends a status that would tell the server what to write in the log (0 = information sent is irrelevant (used if no tasks are completed but need something in the socket), 1 = decrypted a file, 2 = error on reading the file, 3 = error on writing, 4 = exiting expectedly, 5 (or a closed socket with no message) = exiting unexpectedly), then it would send the child PID that decrypted a file, and the name of the decrypted file (or a dummy value and status of 0 otherwise). After sending information it reads from the server. The read blocks the client from inputing in more information to the socket and acts as a way to synchronize the server and client and to avoid overfilling the socket buffer. Like assignment 3, the client parent process reads all remaining child messages when exiting, but it also sends to the server too (in the same style mentioned above).
+  </p>
+  <p>
+    Server implementation revolves around select() which checks if something is trying to connect or disconnect to the socket or if there is activity in the other socket FDs (Ex. something to read meaning the client is ready). If it finds a client trying to connect it will add them to the list of FDs. When looking at client messages, if read() is less than or equal to 0 or status is 4 then the client disconnected and we will remove them from the FD list. Otherwise read the statuses of the clients and send the clients filenames to decrypt. When the server is done sending filenames it will begin sending out exit messages to the clients (a filename/code called "~" which tells the clients to start exiting) and will continue to read remaining information on the clients until they all exit. If there are no clients and there is nothing left to decrypt the server will break from its loop and close its socket. 
+  </p>
+  <p>Testing</p>
+  <p>
+    Initially before updating the code, I tested assignment 3's testcases with my current build to see if there was anything to fix. In this assignment, now that sockets are involved there are many cases where the sockets can fail (such as a bind fail, failure of the function getifaddrs() etc.) so checks had to be implemented in all of them. As for other cases, such as if a decrypted file could not be read from or written to, those were done by using the status codes mentioned in the design and implementation. Testing initially started with testing the program with one client. First with all correct files, I checked if all the decrypted files were correct and if the log file matched the results (with the valid IPv4 address and the expected pattern of the children PIDs that decrypted the file such as expected results from a large file and many small ones), after, a test was done if some incorrect file locations, and again I checked the log file for the results. Once my single client worked, I moved to have it run with 3 clients, I did the same tests above and checked for the output of the log files. Testing was done with files from assignment 3's test cases.
+  </p>
+</body>
+</html>
