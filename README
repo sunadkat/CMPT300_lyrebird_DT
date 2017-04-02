@@ -5,7 +5,8 @@ Lecture Section: CMPT 300: D100
 Instructor: Brian G. Booth
 TA: Scott Kristjanson
 
-This program is an updated version of the previous entry. This program is not limited by the hardware on a single computer now that we utilize sockets. Multiple computers are now able to decrypt the files so the limitations now are the number of computers available. Connections and tasks between server and clients are handled via a first come first served policy and the clients decrypt in a fcfs manner too.
+The program is an updated version of the previous entry, and is not limited by the hardware on a single computer now that we utilize sockets.
+Multiple computers are now able to ecrypt the files therefore, the limitations are the number of computers available. Connections and tasks between server and clients are handled via a first come first served policy ,and the clients decrypt in a fcfs manner too.
 
 This program consists of the following files:
 server.c, client.c, decrypt.c, decrypt.h, and a makefile
